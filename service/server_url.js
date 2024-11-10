@@ -1,1 +1,0 @@
-export const server_url='https://mediaserver-dl7s.onrender.com'

@@ -1,103 +1,75 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import { Button, FloatingLabel, Form, Modal } from 'react-bootstrap';
-import { uploadVideoAPI } from '../../service/allAPI';
 
-
-function Add({setUploadVideoResponse}) {
-
-  const [UploadVideo, setUploadVideo] = useState({
-    id: "", caption: "", url: "", link: ""
-  })
-  // console.log(UploadVideo);
-
-// https://www.youtube.com/watch?v=HHTYK_Bm94c
-// https://www.youtube.com/embed/HHTYK_Bm94c
-
-
-  const getYoutubeLink=(e)=>{
-    const {value}=e.target
-    if(value.includes("v=")){
-      let vID=  value.split("v=")[1].slice(0,11)
-      console.log(`https://www.youtube.com/embed/${vID}`)
-      setUploadVideo({...UploadVideo,link:`https://www.youtube.com/embed/${vID}`})
-    }else{
-      setUploadVideo({...UploadVideo,link:""})
-    }
-  }
-  
-
-  const handleAdd=async()=>{
-    const {id,caption,url,link}=UploadVideo
-    if(!id ||  !caption || !url || !link){
-      alert("Please fill all fields")
-    }else{
-      // store video details to the json server
-     const res = await uploadVideoAPI(UploadVideo)
-      console.log(res)
-      if(res.status>=200&& res.status<=300){
-        // success
-        handleClose()
-        // Alert
-        alert("Uploaded Successfully")
-        // after getting success response field should be empty
-        setUploadVideo({id:"",caption:"",url:"",link:""})
-
-
-        setUploadVideoResponse(res.data)
-
-        }else{
-          // error  
-          console.log(res.message);
-      }
-    }
-
-  }
-
+function Add() {
   const [show, setShow] = useState(false);
+
+  const [allvideos,setAllVideos]=useState({
+    title:"",
+    imageUrl:"",
+    videoUrl:""
+  })
+
+  const handleyoutube= (youtubelink)=>{
+     if(youtubelink.includes('https://www.youtube.com/watch?v=')){
+      const youtubeid=youtubelink.split("v=")[1]
+      setAllVideos({...allvideos,videoUrl:` https://www.youtube.com/embed/${youtubeid}`})
+      
+     }
+  }
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
   return (
     <>
-      <div className="d-flex text-primary shadow-none  alighn-item-center">
-        <h3 style={{ textDecoration: 'none', color: 'bluevilot', fontSize: '30px' }}>Upload Videos</h3>
-        <button onClick={handleShow} className='btn'><i class="fa-solid fa-arrow-up-from-bracket fa-beat fa-2x mb-2"></i></button>
+      <div className="d-flex text-primary shadow-none align-items-center">
+        <h3 style={{ textDecoration: 'none', color: 'blueviolet', fontSize: '30px' }}>
+          Upload Videos
+        </h3>
+        <button onClick={handleShow} className="btn">
+          <i className="fa-solid fa-arrow-up-from-bracket fa-beat fa-2x mb-2"></i>
+        </button>
       </div>
 
-      <Modal
-        show={show}
-        onHide={handleClose}
-        backdrop="static"
-        keyboard={false}
-      >
+      <Modal show={show} onHide={handleClose} backdrop="static" keyboard={false}>
         <Modal.Header closeButton>
-          <Modal.Title>Modal title</Modal.Title>
+          <Modal.Title>Upload Video</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <FloatingLabel controlId="floatingInput" label="Video Id" className="mb-3">
-            <Form.Control type="text" placeholder="Enter Video Id" onChange={(e)=>setUploadVideo({...UploadVideo,id:e.target.value})} />
-          </FloatingLabel>
-          <FloatingLabel controlId="floatingTitle" label="Video Title" className="mb-3" >
-            <Form.Control type="text" placeholder="Enter Video Name"  onChange={(e)=>setUploadVideo({...UploadVideo,caption:e.target.value})} />
-
+          <FloatingLabel controlId="floatingTitle" label="Video Title" className="mb-3">
+            <Form.Control type="text" placeholder="Enter Video Name" onChange={(e)=>{
+              setAllVideos({...allvideos,title:e.target.value})
+              // console.log(allvideos);
+              
+            }} />
           </FloatingLabel>
           <FloatingLabel controlId="floatingInput" label="Image Url" className="mb-3">
-            <Form.Control type="text" placeholder="Image Url" onChange={(e)=>setUploadVideo({...UploadVideo,url:e.target.value})} />
+            <Form.Control type="text" placeholder="Image Url" onChange={(e)=>{
+              setAllVideos({...allvideos,imageUrl:e.target.value})
+              console.log(allvideos);
+              
+            }} />
           </FloatingLabel>
           <FloatingLabel controlId="floatingT" label="Video Url">
-            <Form.Control type="text" placeholder="Video Url" onChange={getYoutubeLink} />
+            <Form.Control type="text" placeholder="Video Url" onChange={(e)=>{
+              handleyoutube(e.target.value)
+            }} />
           </FloatingLabel>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
             Close
           </Button>
-          <Button variant="primary" onClick={handleAdd}>Add</Button>
+          <Button variant="primary">Add</Button>
         </Modal.Footer>
       </Modal>
     </>
-  )
+  );
 }
 
-export default Add
+export default Add;
+
+
+// https://www.youtube.com/watch?v=suTW4yG7b4M
+// https://www.youtube.com/embed/suTW4yG7b4M

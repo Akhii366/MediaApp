@@ -1,76 +1,55 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { Table } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
-import { deleteHistoryAPI, getHistoryAPI } from '../../service/allAPI'
-
 
 function WatchHistory() {
-  const  [history, setHistory] =useState([])
-
-
-
-  useEffect(()=>{
-    getHistory()
-  },[])
-
-
-  const getHistory= async()=>{
-    const result = await getHistoryAPI()
-    console.log(result);
-    if(result.status==200){
-      setHistory(result.data)
-    }else{
-      console.log("API failed");
-      console.log(result.message);
-      
-      
-    }
-    
-  }
-  // console.log(history);
-  
-const removeHistory = async(id)=>{
-  await deleteHistoryAPI(id)
-  getHistory()
-}
-
-
-
-
   return (
     <>
-    <div className='d-flex justify-content-between'>
-      <h1>Watch History</h1>
-      <Link to={'/home'} style={{ textDecoration: 'none', color: 'bluevilot', fontSize: '30px' }} >Back to Home<i class="fa-solid fa-arrow-right-to-bracket fa-beat-fade" ></i></Link>
-    </div>
-    <div>
-      <Table className='border border-2 border-danger'>
-        <thead>
-          <tr>
-          <th>#</th>
-          <th>Caption</th>
-          <th>URL</th>
-          <th>TimeStamp</th>
-          <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {
-            history?.length>0?history.map((video,index)=>(
-          <tr>
-             <td>{index+1}</td>
-             <td>{video.caption}</td>
-             <td><a href={video.link} target='_blank'>{video.link}</a></td>
-             <td>{video.timeStamp}</td>
-             <td><button onClick={()=>removeHistory(video?.id)} className='btn'><i className='fa-solid fa-trash text-danger'></i></button></td>
-          </tr>
-          )):<p>Nothing to Display</p>
-}
-        </tbody>
-      </Table>
-    </div>
+      <div className='d-flex justify-content-between'>
+        <h1>Watch History</h1>
+        <Link to={'/home'} style={{ textDecoration: 'none', color: 'blueviolet', fontSize: '30px' }} >
+          Back to Home <i className="fa-solid fa-arrow-right-to-bracket fa-beat-fade" ></i>
+        </Link>
+      </div>
+
+      <div>
+        <Table className='border border-2 border-danger'>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Caption</th>
+              <th>URL</th>
+              <th>TimeStamp</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>Sample Video Caption</td>
+              <td><a href="#" target='_blank'>https://www.example.com</a></td>
+              <td>12/20/2023, 10:30:00</td>
+              <td>
+                <button className='btn'>
+                  <i className='fa-solid fa-trash text-danger'></i>
+                </button>
+              </td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>Another Video Caption</td>
+              <td><a href="#" target='_blank'>https://www.example2.com</a></td>
+              <td>12/21/2023, 11:00:00</td>
+              <td>
+                <button className='btn'>
+                  <i className='fa-solid fa-trash text-danger'></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </Table>
+      </div>
     </>
-    
   )
 }
 
